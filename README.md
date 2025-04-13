@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧠 MindFree.AI — Frontend
 
-## Getting Started
+MindFree.AI is a secure AI-powered mental wellness platform. This is the frontend built with **Next.js**, offering a smooth and responsive UI for users to:
 
-First, run the development server:
+- Detect and log emotions via webcam (with face-api.js)
+- View emotion trends and analytics
+- Receive therapeutic chat support via GPT-3.5
+- Get personalized meditation music from Gemini
+- View their blockchain-anchored logs from the Midnight network
 
+---
+
+## 🚀 Getting Started
+
+### 🧾 Prerequisites
+
+- Node.js `>=18.x`
+- npm or yarn
+- MongoDB Atlas backend (shared with FastAPI + Node.js)
+- FastAPI server running on `http://localhost:8000`
+- Node.js blockchain anchor server on `http://localhost:6300`
+
+### 📦 Install Dependencies
+
+```bash
+npm install
+# or
+yarn install
+
+### ▶️ Run the Development Server
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Visit: http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+🧠 Backend Services
+| Service              | URL                    | Description                                           |
+|----------------------|------------------------|-------------------------------------------------------|
+| **FastAPI Server**   | http://localhost:8000  | Handles emotion detection, chat AI, and meditation AI |
+| **Node.js Server**   | http://localhost:6300  | Anchors emotion hashes to Midnight blockchain         |
+| **Midnight Node**    | http://localhost:9999  | zk Devnet Node (runs via Docker)                      |
+| **Next.js Frontend** | http://localhost:3000  | UI to interact with emotion detection and anchoring   |
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+📦 NPM Packages Used
+| Package Name                | Purpose                                                                 |
+|----------------------------|-------------------------------------------------------------------------|
+| express                    | Web framework for building Node.js servers                              |
+| cors                       | Enables Cross-Origin Resource Sharing                                   |
+| dotenv                     | Loads environment variables from `.env` files                           |
+| mongodb                    | MongoDB driver for interacting with Atlas database                      |
+| @midnight-ntwrk/wallet     | Midnight SDK to generate wallets and manage blockchain interactions     |
+| @midnight-ntwrk/zswap      | Handles network ID and other Midnight-related blockchain configs         |
+| @midnight-ntwrk/wallet-sdk-hd | Generates secure HD wallet seed phrases                             |
+| node-fetch (or axios)      | Makes HTTP requests between servers                                     |
+| chart.js                   | Used in frontend to visualize emotion trends                            |
+| react-chartjs-2            | React wrapper for Chart.js                                              |
+| next                       | React framework for frontend                                            |
+| react                      | JavaScript library for building user interfaces                         |
+| tailwindcss                | Utility-first CSS framework for custom styling                          |
+| framer-motion              | Smooth UI animations for components                                     |
+| lucide-react               | Icon set used in UI                                                      |
