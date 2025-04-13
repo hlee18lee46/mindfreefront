@@ -6,9 +6,9 @@ import Image from 'next/image';
 
 const rotatingMessages = [
   'Need a therapist?',
-  'Consult with mindfree.ai',
+  'What\'s on your mind?..',
   'Free your mind today.',
-  'Okay to be not Okay.'
+  'It\'s Okay to be not Okay.'
 ];
 
 const rotatingImages = [
@@ -51,9 +51,10 @@ export default function HomePage() {
         </AnimatePresence>
 
         <ul className="text-gray-700 space-y-2 text-md">
-          <li>• Book online, instantly</li>
-          <li>• See a therapist within 2 days</li>
-          <li>• Explore meditation options</li>
+          <li>• Start with MindFree.AI</li>
+          <li>• Tell us your stories, what has been difficult?</li>
+          <li>• Mediate, and Heal</li>
+          <li>• Check your journey</li>
         </ul>
 
         <div className="flex space-x-4">

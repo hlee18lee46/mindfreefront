@@ -60,7 +60,6 @@ export default function LoginPage() {
 
         {/* Form section */}
         <div className="md:w-1/2 w-full px-4">
-          <h2 className="text-3xl font-bold text-center text-indigo-700 mb-6">Welcome Back!</h2>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
             <div>

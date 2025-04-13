@@ -7,8 +7,8 @@ import WelcomeMessage from './WelcomeMessage';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen w-screen overflow-hidden font-sans bg-gradient-to-tr from-slate-50 to-indigo-50 text-gray-800">
-      {/* Sidebar with animation */}
+    <div className="relative flex h-screen w-screen overflow-hidden font-sans bg-gradient-to-tr from-slate-50 to-indigo-50 text-gray-800">
+      {/* Sidebar */}
       <motion.div
         initial={{ x: -50, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
@@ -18,33 +18,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <Navbar />
       </motion.div>
 
-      {/* Middle content area */}
+      {/* Main content */}
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
         className="flex flex-col flex-1 bg-white rounded-lg shadow-md m-4 overflow-hidden"
       >
-        {/* Welcome Message Header */}
+        {/* Welcome Message */}
         <div className="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
           <WelcomeMessage />
         </div>
 
-        {/* Main content */}
-        <div className="flex-1 px-6 py-6 overflow-y-auto flex flex-col">
-  <div className="flex-1 overflow-y-auto">{children}</div>
-</div>
-
-      </motion.div>
-
-      {/* Wallet panel with subtle animation */}
-      <motion.div
-        initial={{ x: 50, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-        className="w-1/4 bg-white/90 backdrop-blur-md p-6 rounded-l-xl shadow-xl m-4"
-      >
-        <WalletInfo />
+        {/* Children Pages */}
+        <div className="flex-1 px-6 py-6 overflow-y-auto">
+          {children}
+        </div>
       </motion.div>
     </div>
   );

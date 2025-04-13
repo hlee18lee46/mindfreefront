@@ -1,37 +1,25 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { Copy } from 'lucide-react';
 
-export default function LaceConnect() {
+export default function WalletInfo() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const fetchedRef = useRef(false);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!dropdownOpen || fetchedRef.current) return;
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
 
-    const fetchUserDetails = async () => {
-      const userId = localStorage.getItem('userId');
-      
-      if (!userId) return;
-
-      try {
-        const response = await fetch(`http://localhost:6300/api/user/${userId}`);
-        const data = await response.json();
+    fetch(`http://localhost:6300/api/user/${userId}`)
+      .then((res) => res.json())
+      .then((data) => {
         setWalletAddress(data.wallet?.address || null);
         setEmail(data.email || null);
-        fetchedRef.current = true;
-      } catch (err) {
-        console.error('❌ Failed to fetch user details:', err);
-      }
-    };
-
-    fetchUserDetails();
-  }, [dropdownOpen]);
+      })
+      .catch((err) => console.error('❌ Failed to fetch wallet info:', err));
+  }, []);
 
   const handleCopy = () => {
     if (walletAddress) {
@@ -42,51 +30,26 @@ export default function LaceConnect() {
   };
 
   return (
-    <div className="absolute top-6 right-6 z-50">
-      <button
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-5 py-2 rounded-lg shadow-sm transition duration-200"
-      >
-        {dropdownOpen ? 'Hide Wallet' : 'Show Wallet'}
-      </button>
+    <div className="bg-white rounded-xl shadow-lg p-4 w-80 ring-1 ring-indigo-100">
+      {email && (
+        <div className="mb-2">
+          <p className="text-sm font-semibold text-indigo-600">Email</p>
+          <p className="text-sm text-gray-700">{email}</p>
+        </div>
+      )}
 
-      <AnimatePresence>
-        {dropdownOpen && (walletAddress || email) && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-            className="mt-3 bg-slate-50 text-slate-700 rounded-xl shadow-lg ring-1 ring-indigo-100 p-5 w-80 break-words"
-          >
-            <div className="space-y-4">
-              {email && (
-                <div>
-                  <p className="text-sm font-semibold text-indigo-600">Email</p>
-                  <p className="text-sm">{email}</p>
-                </div>
-              )}
-
-              {walletAddress && (
-                <div>
-                  <p className="text-sm font-semibold text-indigo-600 mb-1">Wallet Address</p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-xs font-mono break-all flex-1">{walletAddress}</p>
-                    <button
-                      onClick={handleCopy}
-                      className="text-xs text-indigo-500 hover:text-indigo-700"
-                      title="Copy"
-                    >
-                      <Copy size={16} />
-                    </button>
-                  </div>
-                  {copied && <p className="text-xs text-green-500 mt-1">Copied!</p>}
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {walletAddress && (
+        <div>
+          <p className="text-sm font-semibold text-indigo-600 mb-1">Wallet Address</p>
+          <div className="flex items-center gap-2">
+            <p className="text-xs font-mono break-all flex-1">{walletAddress}</p>
+            <button onClick={handleCopy} title="Copy">
+              <Copy size={14} className="text-indigo-500 hover:text-indigo-700" />
+            </button>
+          </div>
+          {copied && <p className="text-xs text-green-500 mt-1">Copied!</p>}
+        </div>
+      )}
     </div>
   );
 }

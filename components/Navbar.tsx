@@ -5,9 +5,13 @@ import { motion } from 'framer-motion';
 import clsx from 'clsx';
 
 const links = [
-  { name: 'Dashboard', href: '/dashboard' },
+  { name: 'Home', href: '/dashboard' },
   { name: 'Session', href: '/session' },
+  { name: 'Meditate', href: '/meditate' },
   { name: 'History', href: '/history' },
+  { name: 'Progress', href: '/progress' },
+  { name: 'Log Out', href: '/' },
+
 ];
 
 export default function Navbar() {

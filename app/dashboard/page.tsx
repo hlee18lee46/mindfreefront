@@ -12,31 +12,37 @@ interface UserData {
   wallet: Wallet;
 }
 
+interface Anchor {
+  txId: string;
+  metadata: {
+    timestamp: string;
+    sha256: string;
+    type: string;
+  };
+  createdAt: string;
+}
+
 export default function DashboardPage() {
   const [user, setUser] = useState<UserData | null>(null);
+  const [anchors, setAnchors] = useState<Anchor[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
-    
     if (!userId) return;
 
-    const fetchUserData = async () => {
-      try {
-        const res = await fetch(`http://localhost:6300/api/user/${userId}`);
-        const data = await res.json();
+    // Fetch user data
+    fetch(`http://localhost:6300/api/user/${userId}`)
+      .then(res => res.json())
+      .then(data => setUser(data))
+      .catch(err => console.error('❌ User fetch failed:', err))
+      .finally(() => setLoading(false));
 
-        if (res.ok) {
-          setUser(data);
-        }
-      } catch (err) {
-        console.error('❌ Error fetching user data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
+    // Fetch anchor logs
+    fetch(`http://localhost:6300/api/midnight/anchors/${userId}`)
+      .then(res => res.json())
+      .then(data => setAnchors(data.anchors || []))
+      .catch(err => console.error('❌ Anchor fetch failed:', err));
   }, []);
 
   return (
@@ -60,6 +66,24 @@ export default function DashboardPage() {
         ) : (
           <p className="text-red-500">User not found. Please log in again.</p>
         )}
+
+        {/* 🔽 Anchors Section */}
+        <div className="pt-6 border-t mt-6">
+          <h2 className="text-2xl font-bold text-indigo-700 mb-4">🪙 Smart Contract Anchors</h2>
+          {anchors.length === 0 ? (
+            <p className="text-gray-600">No anchors found.</p>
+          ) : (
+            <div className="space-y-4">
+              {anchors.map((anchor, idx) => (
+                <div key={idx} className="p-4 border rounded-lg bg-white shadow-md">
+                  <p className="font-semibold">Tx ID: <span className="text-gray-700">{anchor.txId}</span></p>
+                  <p className="text-sm text-gray-600">Hash: {anchor.metadata.sha256}</p>
+                  <p className="text-sm text-gray-500">Anchored at: {new Date(anchor.createdAt).toLocaleString()}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </Layout>
   );
