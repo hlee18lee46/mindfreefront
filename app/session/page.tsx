@@ -86,6 +86,20 @@ export default function SessionPage() {
               context.fillText(text, box.x, box.y - 10 - i * 18);
             });
             
+            const top3 = Object.fromEntries(sorted.slice(0, 3));
+
+            const user_email = localStorage.getItem('userEmail');
+            const payload = {
+              user_email,
+              emotions: top3,
+              timestamp: new Date().toISOString()
+            };
+          
+            fetch('http://localhost:8000/log_emotion', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            }).catch((err) => console.error("❌ Emotion log failed:", err));
 
           console.log('🧠 Emotion scores:', expressions);
 
@@ -99,29 +113,33 @@ export default function SessionPage() {
   }, []);
   
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+const sendMessage = async () => {
+  if (!input.trim()) return;
 
-    const userMessage: ChatMessage = { role: 'user', content: input };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput('');
-    setLoading(true);
+  const userMessage: ChatMessage = { role: 'user', content: input };
+  setMessages((prev) => [...prev, userMessage]);
+  setInput('');
+  setLoading(true);
 
-    try {
-      const res = await fetch('http://localhost:8000/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: localStorage.getItem('userId'), messages: [...messages, userMessage] }),
-      });
+  try {
+    const res = await fetch('http://localhost:8000/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_input: input,
+        user_email: localStorage.getItem('userEmail') // ✅ backend expects this
+      }),      
+    });
 
-      const data = await res.json();
-      setMessages((prev) => [...prev, { role: 'ai', content: data.response }]);
-    } catch (err) {
-      console.error('❌ Chat error:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const data = await res.json();
+    setMessages((prev) => [...prev, { role: 'ai', content: data.response }]);
+  } catch (err) {
+    console.error('❌ Chat error:', err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <Layout>
@@ -146,18 +164,25 @@ export default function SessionPage() {
 
         {/* Chat box */}
         <div className="flex-1 overflow-y-auto space-y-4 bg-indigo-50 rounded-lg p-4 shadow-inner">
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`max-w-lg px-4 py-2 rounded-xl ${
-                msg.role === 'user'
-                  ? 'bg-indigo-600 text-white self-end ml-auto'
-                  : 'bg-white text-gray-800 self-start'
-              }`}
-            >
-              {msg.content}
-            </div>
-          ))}
+        {messages.map((msg, index) => (
+  <div
+    key={index}
+    className={`px-4 py-3 rounded-2xl whitespace-pre-wrap break-words leading-relaxed shadow ${
+      msg.role === 'user'
+        ? 'bg-indigo-600 text-white self-end ml-auto max-w-[70%]'
+        : 'bg-white text-gray-800 self-start mr-auto max-w-[80%] border border-gray-200'
+    }`}
+    style={{
+      fontSize: '1rem',
+      lineHeight: '1.6',
+      wordBreak: 'break-word',
+    }}
+  >
+    {msg.content}
+  </div>
+))}
+
+
           {loading && <p className="text-sm text-gray-500 italic">Gemini is typing...</p>}
           <div ref={messagesEndRef} />
         </div>

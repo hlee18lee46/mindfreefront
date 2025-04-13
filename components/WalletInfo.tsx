@@ -16,6 +16,7 @@ export default function LaceConnect() {
 
     const fetchUserDetails = async () => {
       const userId = localStorage.getItem('userId');
+      
       if (!userId) return;
 
       try {

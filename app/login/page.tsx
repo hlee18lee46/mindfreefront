@@ -31,6 +31,7 @@ export default function LoginPage() {
       }
 
       localStorage.setItem('userId', data.userId);
+      localStorage.setItem('userEmail', data.email);  
       router.push('/dashboard'); // 👈 redirect after login
     } catch (err) {
       console.error('Login error:', err);

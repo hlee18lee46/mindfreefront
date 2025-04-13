@@ -18,6 +18,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
+    
     if (!userId) return;
 
     const fetchUserData = async () => {

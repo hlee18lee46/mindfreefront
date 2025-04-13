@@ -29,6 +29,7 @@ export default function CreateAccountPage() {
       }
 
       localStorage.setItem('userId', data.userId);
+      localStorage.setItem('userEmail', data.email);  
       router.push('/dashboard');
     } catch (err) {
       console.error('Registration error:', err);
