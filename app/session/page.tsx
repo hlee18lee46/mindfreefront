@@ -183,7 +183,7 @@ const sendMessage = async () => {
 ))}
 
 
-          {loading && <p className="text-sm text-gray-500 italic">Gemini is typing...</p>}
+          {loading && <p className="text-sm text-gray-500 italic">MindFree.AI is typing...</p>}
           <div ref={messagesEndRef} />
         </div>
 
